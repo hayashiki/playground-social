@@ -6,7 +6,7 @@ import javax.validation.constraints.Email
 
 
 @Entity
-@Table(name = "social_user")
+@Table(name = "users")
 data class User (
 
     @Id

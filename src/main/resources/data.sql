@@ -5,5 +5,6 @@ CREATE TABLE users(
                             username  varchar(255) unique not null,
                             password  varchar(255),
                             email varchar(255),
-                            image_url varchar(255)
+                            image_url varchar(255),
+                            imageUrl varchar(255)
 );
