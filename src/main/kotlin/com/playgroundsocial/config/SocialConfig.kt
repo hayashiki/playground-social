@@ -1,6 +1,6 @@
 package com.playgroundsocial.config
 
-import com.playgroundsocial.auth.FacebookSignInAdapter
+import com.playgroundsocial.auth.AccountConnectionSignUp
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -21,6 +21,7 @@ import org.springframework.social.connect.web.ProviderSignInController
 import org.springframework.social.connect.web.ProviderSignInUtils
 import org.springframework.social.connect.web.SignInAdapter
 import org.springframework.social.facebook.connect.FacebookConnectionFactory
+import org.springframework.social.oauth1.AuthorizedRequestToken
 import org.springframework.social.security.AuthenticationNameUserIdSource
 import org.springframework.social.twitter.connect.TwitterConnectionFactory
 import javax.sql.DataSource
@@ -28,27 +29,54 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableSocial
-class SocialConfig : SocialConfigurer {
+class SocialConfig : SocialConfigurerAdapter() {
 
     @Autowired
     internal var dataSource: DataSource? = null
 
+    @Autowired
+    lateinit var accountConnectionSignUp: AccountConnectionSignUp
+
+
+
     override fun getUserIdSource() = AuthenticationNameUserIdSource()
 
     override fun getUsersConnectionRepository(connectionFactoryLocator: ConnectionFactoryLocator): UsersConnectionRepository {
-        return JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText())
+        var repository = JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText())
+        repository.setConnectionSignUp(accountConnectionSignUp)
+        return repository
     }
 
+//    override fun getUsersConnectionRepository(connectionFactoryLocator: ConnectionFactoryLocator): UsersConnectionRepository {
+//        return JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText())
+//
+//    }
+
     override fun addConnectionFactories(cfConfig: ConnectionFactoryConfigurer, env: Environment) {
-        cfConfig.addConnectionFactory(TwitterConnectionFactory(
+
+        val twitterConnectionFactory = TwitterConnectionFactory(
                 env.getProperty("spring.social.twitter.app-id"),
-                env.getProperty("spring.social.twitter.app-secret")))
+                env.getProperty("spring.social.twitter.app-secret")
+        )
+
+//        val oauthOperations = twitterConnectionFactory.getOAuthOperations()
+//        val accessToken = oauthOperations.exchangeForAccessToken(AuthorizedRequestToken(requestToken, oauthVerifier), null)
+//        val twitterConnection = twitterConnectionFactory.createConnection(accessToken)
+
+        cfConfig.addConnectionFactory(twitterConnectionFactory)
+
         val facebookConnectionFactory = FacebookConnectionFactory(
                 env.getProperty("spring.social.facebook.app-id"),
                 env.getProperty("spring.social.facebook.app-secret"))
-        facebookConnectionFactory.setScope("public_profile,email")
+        facebookConnectionFactory.scope = "public_profile,email"
         cfConfig.addConnectionFactory(facebookConnectionFactory)
     }
+
+        @Bean
+        fun connectController(connectionFactoryLocator: ConnectionFactoryLocator, connectionRepository: ConnectionRepository): ConnectController {
+            return ConnectController(connectionFactoryLocator, connectionRepository)
+        }
+
 }
 
 

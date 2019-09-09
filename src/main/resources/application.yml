@@ -6,8 +6,8 @@ spring:
     password: password
   social:
     facebook:
-      app-id: 339590223298588
-      app-secret: 80e4c30063b07f1d4023f92216d546c0
+      app-id: 1299326030235165
+      app-secret: d4cb89607a09ea10ed29769c6021d59b
     twitter:
       app-id: C8m4aDDH6Y5WEWK6HFg0FJSNb
       app-secret: sqbv2jWuu30h05uBvHsNY9UJprlNVq6wVRqCCNcSnXOjhzVQZa

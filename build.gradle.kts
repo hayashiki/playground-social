@@ -47,7 +47,11 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
 //    implementation("org.springframework.social:spring-social-core:2.0.0.M2")
 //    implementation("org.springframework.social:spring-social-config:2.0.0.M2")
-    implementation("org.springframework.social:spring-social-facebook:3.0.0.M3")
+//    implementation("org.springframework.social:spring-social-facebook:3.0.0.M3")
+//    implementation("org.springframework.social:spring-social-facebook:3.0.0.M2")
+    implementation("org.springframework.social:spring-social-facebook:3.0.0.M1")
+
+//    implementation("org.springframework.social:spring-social-facebook:2.0.3.RELEASE")
     implementation ("org.springframework.social:spring-social-twitter:1.1.2.RELEASE")
     implementation("org.springframework.social:spring-social-security:1.1.6.RELEASE")
 
